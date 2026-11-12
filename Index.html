@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia del Virreinato del Perú - Lectura Interactiva</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #2c3e50;
+        }
+        h1 {
+            color: #1a252f;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controles {
+            text-align: center;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            background: rgba(244, 247, 246, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 10px;
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+            transition: background-color 0.2s;
+        }
+        button:hover { background-color: #2980b9; }
+        button#btnStop { background-color: #e74c3c; box-shadow: 0 4px 6px rgba(231, 76, 60, 0.2); }
+        button#btnStop:hover { background-color: #c0392b; }
+        
+        .texto-container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+            font-size: 18px;
+            text-align: justify;
+        }
+        .texto-container p {
+            margin-bottom: 15px;
+        }
+        .palabra {
+            padding: 2px 1px;
+            border-radius: 4px;
+            transition: background-color 0.1s ease;
+        }
+        .resaltado {
+            background-color: #ffeaa7;
+            color: #d35400;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Historia del Virreinato del Perú</h1>
+    
+    <div class="controles">
+        <button id="btnPlay">▶ Reproducir Audio</button>
+        <button id="btnStop">■ Detener</button>
+    </div>
+    
+    <div id="contenidoTexto" class="texto-container">
+        <!-- El texto con formato se inyectará aquí -->
+    </div>
+
+    <script>
+        // Separamos el texto en párrafos para mantener el diseño visual
+        const parrafosTexto = [
+            "En 1542, la Corona Española creó el Virreinato del Perú, que se reorganizó después de la llegada del virrey Francisco de Toledo en 1572. Él puso fin al Estado neoincaico y ejecutó a Túpac Amaru I. También buscó el desarrollo económico, a través del monopolio comercial y la extracción de minerales, principalmente de las minas de plata de Potosí. Reutilizó el sistema inca de la mita, un programa de trabajo forzado, para movilizar a las comunidades nativas para el trabajo de minería. Esta organización transformó al Perú en la principal fuente de riqueza y poder de España en América del Sur.",
+            "La ciudad de Lima fue fundada por Pizarro, el 18 de enero de 1535 como la Ciudad de Reyes (en honor a los reyes magos). Se convirtió en la capital del nuevo virreinato, con jurisdicción sobre la mayor parte de la América española. Los metales preciosos pasaron por Lima en su camino hacia el Istmo de Panamá y de allí a Sevilla, o de México a Filipinas pasando por Acapulco. En el siglo XVIII, Lima se había convertido en una capital colonial distinguida y aristocrática, sede de una universidad y el principal bastión español en América.",
+            "Las guerras civiles entre los conquistadores españoles y la Gran Rebelión de los encomenderos",
+            "Véanse también: Guerras civiles entre los conquistadores del Perú y Gran Rebelión de Encomenderos.",
+            "Ilustración del siglo XVIII que representa la decapitación de Gonzalo Pizarro, jefe de la rebelión de los encomenderos de 1544.",
+            "Por las Capitulaciones de Toledo, que Pizarro había firmado con la Corona española en 1529 se establecía que éste podía gobernar en nombre del Rey todas las tierras al sur (hasta 250 leguas) de Tumbes. Posteriormente, el otro líder conquistador, Diego de Almagro, obtendría el mismo estatus en los territorios al sur de la gobernación de Pizarro. Sin embargo, el límite estaba cerca del Cusco, lo que hizo que uno y otro bando reclamaran la posesión de la capital del Imperio incaico. Ello fue el inicio en 1538 de una larga etapa de luchas intestinas entre los conquistadores, donde no solo se disputaron territorios sino derechos (encomiendas) y privilegios, a veces solo entre ellos, a veces contra la corona.",
+            "Se dividen estas guerras civiles entre los conquistadores en cuatro grandes bloques:",
+            "- La guerra entre Francisco Pizarro y Diego de Almagro el Viejo (1537-1538), que culminó con la victoria pizarrista en la batalla de las Salinas.",
+            "- La guerra entre Diego de Almagro el Mozo y Cristóbal Vaca de Castro (1541-1542), que culminó con el triunfo de los pizarristas y partidarios del Rey unidos contra los almagristas, en la batalla de Chupas.",
+            "- La rebelión de Gonzalo Pizarro (1544-1548), que se alzó contra la Corona española encabezando a los encomenderos, siendo finalmente derrotado en la batalla de Jaquijahuana.",
+            "- La rebelión de Francisco Hernández Girón (1553-1554), otro líder de encomenderos que finalmente fue derrotado en la batalla de Pucará.",
+            "Las dos primeras fases se pueden resumir como una disputa entre los bandos de almagristas y pizarristas, estos últimos alineados finalmente en torno al representante de la Corona, el visitador Vaca de Castro. Mientras que las dos fases siguientes se definen claramente como la rebelión de los encomenderos en contra de la Corona española, motivada por algunas leyes u ordenanzas que iban contra sus intereses: en el caso de la rebelión de Gonzalo Pizarro, por la supresión de las encomiendas hereditarias, y en el caso de la de Francisco Hernández Girón, por la supresión del trabajo personal de los indios, entre otras razones.",
+            "La Corona española finalmente impuso su autoridad, estableciendo que el Perú sería un Virreinato del imperio español. Así se estableció una corte en Lima, la ciudad fundada por Pizarro en la costa central del Perú, donde una serie de 40 virreyes gobernaron ininterrumpidamente buena parte de Sudamérica entre 1544 y 1824. A partir del último tercio del siglo XVIII se fueron creando nuevos virreinatos con territorios escindidos del virreinato peruano (Virreinato de Nueva Granada y Virreinato del Río de la Plata)."
+        ];
+
+        const contenedor = document.getElementById('contenidoTexto');
+        let htmlConstruido = "";
+        let globalIndex = 0;
+        let listaPalabrasLimpias = [];
+
+        // Generamos la estructura HTML envolviendo cada palabra individualmente
+        parrafosTexto.forEach(parrafo => {
+            let palabras = parrafo.split(' ');
+            let pHTML = "<p>";
+            palabras.forEach(palabra => {
+                pHTML += `<span class="palabra" id="palabra-${globalIndex}">${palabra}</span> `;
+                listaPalabrasLimpias.push(palabra);
+                globalIndex++;
+            });
+            pHTML += "</p>";
+            htmlConstruido += pHTML;
+        });
+
+        contenedor.innerHTML = htmlConstruido;
+
+        // Texto continuo de un solo espacio para que la API de voz sincronice perfectamente
+        const textoParaLector = listaPalabrasLimpias.join(' ');
+
+        let synth = window.speechSynthesis;
+        let utterance;
+
+        document.getElementById('btnPlay').addEventListener('click', () => {
+            if (synth.speaking) synth.cancel();
+
+            utterance = new SpeechSynthesisUtterance(textoParaLector);
+            utterance.lang = 'es-ES';
+            utterance.rate = 0.95;
+
+            // Función para limpiar resaltados
+            const limpiarResaltado = () => {
+                document.querySelectorAll('.palabra').forEach(p => p.classList.remove('resaltado'));
+            };
+
+            limpiarResaltado();
+
+            utterance.onboundary = (event) => {
+                if (event.name === 'word') {
+                    let indiceCaracter = event.charIndex;
+                    let longitudActual = 0;
+                    
+                    for (let i = 0; i < listaPalabrasLimpias.length; i++) {
+                        if (longitudActual === indiceCaracter || (indiceCaracter > longitudActual && indiceCaracter <= longitudActual + listaPalabrasLimpias[i].length)) {
+                            limpiarResaltado();
+                            const spanActual = document.getElementById(`palabra-${i}`);
+                            if (spanActual) {
+                                spanActual.classList.add('resaltado');
+                                // Opcional: auto-scroll para mantener la palabra visible
+                                // spanActual.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            break;
+                        }
+                        // Sumamos la longitud de la palabra + 1 (el espacio que las separa en textoParaLector)
+                        longitudActual += listaPalabrasLimpias[i].length + 1;
+                    }
+                }
+            };
+
+            utterance.onend = limpiarResaltado;
+            synth.speak(utterance);
+        });
+
+        document.getElementById('btnStop').addEventListener('click', () => {
+            synth.cancel();
+            document.querySelectorAll('.palabra').forEach(p => p.classList.remove('resaltado'));
+        });
+    </script>
+</body>
+</html>
